@@ -1,2 +1,2 @@
-\# IKT 110 Handin 1
+# IKT 110 Handin 1
 

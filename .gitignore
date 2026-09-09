@@ -1,0 +1,26 @@
+# PyCharm
+.idea/
+
+# Virtuelle Python-miljøer
+.venv/
+venv/
+env/
+
+# Python-cache og kompilerte filer
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Lokale miljøvariabler
+.env
+.env.*
+!.env.example
+
+# Jupyter Notebook-cache
+.ipynb_checkpoints/
+
+# Operativsystem
+.DS_Store
+Thumbs.db

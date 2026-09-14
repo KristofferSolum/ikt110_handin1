@@ -94,23 +94,23 @@ def model(dep_hour, dep_min):
     predicted_bcd = pred_bcd(scaled_input_depature)
     predicted_bce = pred_bce(scaled_input_depature)
 
-    acd_lower = predicted_acd - acd_pd10
+    acd_lower = predicted_acd + acd_pd10
     acd_upper = predicted_acd + acd_pd90
 
-    ace_lower = predicted_ace - ace_pd10
+    ace_lower = predicted_ace + ace_pd10
     ace_upper = predicted_ace + ace_pd90
 
-    bcd_lower = predicted_bcd - bcd_pd10
+    bcd_lower = predicted_bcd + bcd_pd10
     bcd_upper = predicted_bcd + bcd_pd90
 
-    bce_lower = predicted_bce - bce_pd10
+    bce_lower = predicted_bce + bce_pd10
     bce_upper = predicted_bce + bce_pd90
 
 
     output = Result()
 
     routs = ["A->C->D", "A->C->E", "B->C->D", "B->C->E"]
-    route_scores = np.array([predicted_acd - acd_pd10 + acd_pd90, predicted_ace - ace_pd10 + ace_pd90, predicted_bcd - bcd_pd10 + bcd_pd90, predicted_bce - bce_pd10 + bce_pd90])
+    route_scores = np.array([predicted_acd + acd_pd10 + acd_pd90, predicted_ace + ace_pd10 + ace_pd90, predicted_bcd + bcd_pd10 + bcd_pd90, predicted_bce + bce_pd10 + bce_pd90])
     best_route = routs[np.argmin(route_scores)]
 
     if best_route == "A->C->D":

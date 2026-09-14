@@ -1,0 +1,55 @@
+.comparison .table-head {
+  color: #263d32;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.comparison .route-row { min-height: 120px; }
+.comparison .range > span {
+  height: 12px;
+  margin: 12px 0 18px;
+  background: #d2d6ce;
+}
+.comparison .range i {
+  height: 12px;
+  min-width: 3px;
+  background: #286347;
+  border: 1px solid #164d3a;
+}
+.comparison .range b {
+  top: -7px;
+  height: 26px;
+  width: 6px;
+  transform: translateX(-50%);
+  background: #15251f;
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px #fffdf8;
+}
+.comparison .range small {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #15251f;
+  font-variant-numeric: tabular-nums;
+}
+.comparison .range-label { font-weight: 400; }
+.comparison .difference,
+.comparison .method-note,
+.comparison .section-heading p {
+  font-size: 15px;
+  color: #374e42;
+  line-height: 1.6;
+}
+.interval-legend { color: #263d32; font-size: 16px; line-height: 1.6; }
+.comparison .table-head, .comparison .route-row {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, .65fr) minmax(0, 1.25fr) minmax(0, .45fr);
+}
+@media (max-width: 1100px) {
+  .comparison .table-head { display: none; }
+  .comparison .route-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .comparison .route-name { flex-wrap: wrap; }
+  .comparison .range { grid-column: 1 / -1; }
+  .comparison .difference { position: static; grid-column: 1 / -1; text-align: left; }
+}

@@ -1,0 +1,6 @@
+.language-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 18px;border:2px solid #204f96;border-radius:6px;background:white;color:#183d74;font-size:16px;font-weight:700;text-decoration:none;flex-shrink:0}
+.language-toggle:hover{background:#e0eaff}
+.language-toggle:focus-visible{outline:3px solid #183d74;outline-offset:3px}
+header{gap:16px}
+header .status{margin-left:auto}
+@media(max-width:700px){header .status{display:none}.language-toggle{margin-left:auto}header{padding-left:16px;padding-right:16px}.brand strong{font-size:14px}}

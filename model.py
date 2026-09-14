@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Result:
-    def init(self):
+    def __init__(self):
         self.best_route = None
         self.best_route_time = None
         self.best_route_time_lower = None
@@ -79,11 +79,28 @@ def model(dep_hour, dep_min):
     & (data_errors["depature"] <= input_depature + pd.Timedelta(minutes=15))
     ]["error"])
 
-    acd_pd10, acd_pd90 = np.percentile(neighbors_acd_errors, [10, 90])
-    ace_pd10, ace_pd90 = np.percentile(neighbors_ace_errors, [10, 90])
-    bcd_pd10, bcd_pd90 = np.percentile(neighbors_bcd_errors, [10, 90])
-    bce_pd10, bce_pd90 = np.percentile(neighbors_bce_errors, [10, 90])
+    def error_percentiles(local_errors, route):
+        # Early departures can have no observations in the +/- 15 minute window.
+        # In that case, use the route's full error history as a stable fallback.
+        if len(local_errors) == 0:
+            local_errors = np.array(data_errors.loc[data_errors["route"] == route]["error"])
+        return np.percentile(local_errors, [10, 90])
 
+    acd_pd10, acd_pd90 = error_percentiles(neighbors_acd_errors, "A->C->D")
+    ace_pd10, ace_pd90 = error_percentiles(neighbors_ace_errors, "A->C->E")
+    bcd_pd10, bcd_pd90 = error_percentiles(neighbors_bcd_errors, "B->C->D")
+    bce_pd10, bce_pd90 = error_percentiles(neighbors_bce_errors, "B->C->E")
+
+    if acd_pd10 > 0:
+        acd_pd10 = 0    
+    if ace_pd10 > 0:
+        ace_pd10 = 0
+    if bcd_pd10 > 0:
+        bcd_pd10 = 0
+    if bce_pd10 > 0:
+        bce_pd10 = 0
+
+        
     min_depature = 420
     max_depature  = 1019
     range_depature = max_depature -min_depature
@@ -110,7 +127,7 @@ def model(dep_hour, dep_min):
     output = Result()
 
     routs = ["A->C->D", "A->C->E", "B->C->D", "B->C->E"]
-    route_scores = np.array([predicted_acd + acd_pd10 + acd_pd90, predicted_ace + ace_pd10 + ace_pd90, predicted_bcd + bcd_pd10 + bcd_pd90, predicted_bce + bce_pd10 + bce_pd90])
+    route_scores = np.array([predicted_acd, predicted_ace, predicted_bcd, predicted_bce])
     best_route = routs[np.argmin(route_scores)]
 
     if best_route == "A->C->D":

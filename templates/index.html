@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}{{ t('Finn raskeste rute') }} · KnutKnut{% endblock %}{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='time-select.css') }}">
+<section class="hero"><div class="eyebrow"><span>{{ t('Ruteoptimalisering') }}</span> / {{ t('fire ruter, ett smart valg') }}</div><h1>{{ t('Smartere rute.') }}<br><em>{{ t('Raskere levering.') }}</em></h1><p class="intro">{{ t('Fra start til mål med færre minutter på veien. Oppgi avreisetiden, så sammenligner vi fire ruter og finner den med kortest estimert reisetid.') }}</p>
+<section class="tested-savings" aria-labelledby="tested-savings-title">
+  <strong>15 <span>min</span></strong>
+  <div><h2 id="tested-savings-title">{{ t('Spart per tur i gjennomsnitt') }}</h2></div>
+</section>
+<form class="departure-card" action="{{ url_for('get_route') }}" method="get"><div class="form-copy"><span class="step">01</span><div><label id="departure-label">{{ t('Når drar du?') }}</label><small>{{ t('Velg et tidspunkt mellom 06:00 og 17:59') }}</small></div></div><div class="form-action"><div class="time-selects" aria-labelledby="departure-label">
+<div class="custom-select" data-select><input class="time-input" type="text" inputmode="numeric" name="hour" aria-label="{{ t('Time, fra 06 til 17') }}" pattern="0?[6-9]|1[0-7]" maxlength="2" required autocomplete="off" title="{{ t('Skriv en time fra 06 til 17') }}" value="{{ '%02d'|format(selected_hour) }}"><button type="button" class="select-trigger" aria-label="{{ t('Velg time') }}" aria-controls="hour-menu" aria-haspopup="listbox" aria-expanded="false"><span>⌄</span></button><div id="hour-menu" class="select-menu" role="listbox" aria-label="{{ t('Timer') }}">{% for hour in range(6, 18) %}<button type="button" role="option" data-value="{{ '%02d'|format(hour) }}" aria-selected="{{ 'true' if hour == selected_hour else 'false' }}">{{ '%02d'|format(hour) }}</button>{% endfor %}</div></div>
+<span class="time-colon">:</span>
+<div class="custom-select" data-select><input class="time-input" type="text" inputmode="numeric" name="minute" aria-label="{{ t('Minutt, fra 00 til 59') }}" pattern="[0-5]?[0-9]" maxlength="2" required autocomplete="off" title="{{ t('Skriv et minutt fra 00 til 59') }}" value="{{ '%02d'|format(selected_minute) }}"><button type="button" class="select-trigger" aria-label="{{ t('Velg minutt') }}" aria-controls="minute-menu" aria-haspopup="listbox" aria-expanded="false"><span>⌄</span></button><div id="minute-menu" class="select-menu" role="listbox" aria-label="{{ t('Minutter') }}">{% for minute in range(60) %}<button type="button" role="option" data-value="{{ '%02d'|format(minute) }}" aria-selected="{{ 'true' if minute == selected_minute else 'false' }}">{{ '%02d'|format(minute) }}</button>{% endfor %}</div></div>
+</div><button class="submit-route">{{ t('Finn beste rute') }} <span>→</span></button></div>{% if error %}<p class="error">{{ error }}</p>{% endif %}</form>
+<div class="how"><p>{{ t('Slik fungerer det') }}</p><ol><li><b>01</b><span>{{ t('Du velger') }}<br>{{ t('avreisetid') }}</span></li><li><b>02</b><span>{{ t('Modellene vurderer') }}<br>{{ t('fire ruter') }}</span></li><li><b>03</b><span>{{ t('Du får den') }}<br>{{ t('raskeste ruten') }}</span></li></ol></div></section>
+<aside class="route-art pitch-map">
+<div class="map-heading"><small>{{ t('FIRE RUTER. ETT MÅL.') }}</small><h2>{{ t('Fra start') }}<br>{{ t('til levering.') }}</h2></div>
+<svg viewBox="0 0 400 500" role="img" aria-label="{{ t('Alle ruter går fra Start via A eller B, så C, så D eller E og videre til Mål. Illustrasjon, ikke en ruteanbefaling.') }}">
+<g fill="none" stroke="#bed2f5" stroke-width="3"><path d="M200 50L100 140L200 250L100 360L200 450"/><path d="M200 50L300 140L200 250L300 360L200 450"/></g>
+<g fill="#cbe6a9" stroke="#183d74" stroke-width="3"><circle cx="100" cy="140" r="27"/><circle cx="300" cy="140" r="27"/><circle cx="200" cy="250" r="27"/><circle cx="100" cy="360" r="27"/><circle cx="300" cy="360" r="27"/></g>
+<g fill="white"><rect x="142" y="27" width="116" height="46" rx="8"/><rect x="142" y="427" width="116" height="46" rx="8"/></g>
+<g fill="#122e57" font-family="sans-serif" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle"><text x="200" y="50">Start</text><text x="100" y="140">A</text><text x="300" y="140">B</text><text x="200" y="250">C</text><text x="100" y="360">D</text><text x="300" y="360">E</text><text x="200" y="450">{{ t('Mål') }}</text></g></svg>
+<p class="map-caption">{{ t('Samme start. Samme mål.') }}<br>{{ t('Avreisetiden avgjør rutevalget.') }}</p></aside>
+<div class="route-transition" id="route-transition" role="status" aria-live="polite" hidden>
+  <div class="route-transition-content"><i class="route-spinner" aria-hidden="true"></i><strong>KNUT KNUT!</strong></div>
+</div>
+<link rel="stylesheet" href="{{ url_for('static', filename='route-transition.css') }}">
+<script src="{{ url_for('static', filename='route-transition.js') }}" defer></script>
+{% endblock %}

@@ -5,6 +5,9 @@ import numpy as np
 class Result:
     def init(self):
         self.best_route = None
+        self.best_route_time = None
+        self.best_route_time_lower = None
+        self.best_route_time_upper = None
         self.acd_time = None
         self.acd_time_lower = None
         self.acd_time_upper = None
@@ -47,8 +50,8 @@ def pred_bce(x):
     period = 1.00159422e-01
     return vertical_offset - slope_magnitude * ((x - horizontal_shift) % period)
 
-def model(input_depature):
-
+def model(dep_hour, dep_min):
+    input_depature = "{}:{}".format(dep_hour, dep_min)
     input_depature = pd.to_datetime(input_depature, format="%H:%M") 
     data_errors = pd.read_csv("./errors.csv", index_col=0, parse_dates=["depature"])
 
@@ -110,22 +113,67 @@ def model(input_depature):
     route_scores = np.array([predicted_acd - acd_pd10 + acd_pd90, predicted_ace - ace_pd10 + ace_pd90, predicted_bcd - bcd_pd10 + bcd_pd90, predicted_bce - bce_pd10 + bce_pd90])
     best_route = routs[np.argmin(route_scores)]
 
+    if best_route == "A->C->D":
+        output.best_route = "A->C->D"
+        output.best_route_time = predicted_acd
+        output.best_route_time_lower = acd_lower
+        output.best_route_time_upper = acd_upper
 
-    output.best_route = best_route
-    output.acd_time = predicted_acd
-    output.acd_time_lower = acd_lower
-    output.acd_time_upper = acd_upper
-    output.ace_time = predicted_ace
-    output.ace_time_lower = ace_lower
-    output.ace_time_upper = ace_upper
-    output.bcd_time = predicted_bcd
-    output.bcd_time_lower = bcd_lower
-    output.bcd_time_upper = bcd_upper
-    output.bce_time = predicted_bce
-    output.bce_time_lower = bce_lower
-    output.bce_time_upper = bce_upper
+        output.ace_time = predicted_ace
+        output.ace_time_lower = ace_lower
+        output.ace_time_upper = ace_upper
+        output.bcd_time = predicted_bcd
+        output.bcd_time_lower = bcd_lower
+        output.bcd_time_upper = bcd_upper
+        output.bce_time = predicted_bce
+        output.bce_time_lower = bce_lower
+        output.bce_time_upper = bce_upper
+    elif best_route == "A->C->E":
+        output.best_route = "A->C->E"
+        output.best_route_time = predicted_ace
+        output.best_route_time_lower = ace_lower
+        output.best_route_time_upper = ace_upper
+
+        output.acd_time = predicted_acd
+        output.acd_time_lower = acd_lower
+        output.acd_time_upper = acd_upper
+        output.bcd_time = predicted_bcd
+        output.bcd_time_lower = bcd_lower
+        output.bcd_time_upper = bcd_upper
+        output.bce_time = predicted_bce
+        output.bce_time_lower = bce_lower
+        output.bce_time_upper = bce_upper
+    elif best_route == "B->C->D":
+        output.best_route = "B->C->D"
+        output.best_route_time = predicted_bcd
+        output.best_route_time_lower = bcd_lower
+        output.best_route_time_upper = bcd_upper
+
+        output.acd_time = predicted_acd
+        output.acd_time_lower = acd_lower
+        output.acd_time_upper = acd_upper
+        output.ace_time = predicted_ace
+        output.ace_time_lower = ace_lower
+        output.ace_time_upper = ace_upper
+        output.bce_time = predicted_bce
+        output.bce_time_lower = bce_lower
+        output.bce_time_upper = bce_upper
+    elif best_route == "B->C->E":
+        output.best_route = "B->C->E"
+        output.best_route_time = predicted_bce
+        output.best_route_time_lower = bce_lower
+        output.best_route_time_upper = bce_upper
+        output.acd_time = predicted_acd
+        output.acd_time_lower = acd_lower
+        output.acd_time_upper = acd_upper
+        output.ace_time = predicted_ace
+        output.ace_time_lower = ace_lower
+        output.ace_time_upper = ace_upper
+        output.bcd_time = predicted_bcd
+        output.bcd_time_lower = bcd_lower
+        output.bcd_time_upper = bcd_upper
+
 
     return output
 
 
-print(model("06:00").best_route)

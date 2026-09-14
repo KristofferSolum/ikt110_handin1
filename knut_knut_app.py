@@ -1,6 +1,7 @@
 import random
 from flask import Flask
 from flask import request
+from model import model, Result
 
 app = Flask(__name__)
 
@@ -8,9 +9,11 @@ app = Flask(__name__)
 def get_the_best_route_as_a_text_informatic(dep_hour, dep_min):
     roads = ["A->C->D", "A->C->E", "B->C->D", "B->C->E"]
 
+    prediction = model(dep_hour, dep_min)
+
     # perform some magic here - instead of just a random selection
-    est_travel_time = random.randint(10, 120)
-    best_road = random.choice(roads)
+    est_travel_time = prediction.best_route_time
+    best_road = prediction.best_route
 
     out = """
     <p>
